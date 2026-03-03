@@ -1,0 +1,29 @@
+{
+  "name": "microservice-cs366",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Supanat6609650665/microservice-cs366.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Supanat6609650665/microservice-cs366/issues"
+  },
+  "homepage": "https://github.com/Supanat6609650665/microservice-cs366#readme",
+  "description": "",
+  "dependencies": {
+    "@aws-sdk/client-sns": "^3.1000.0",
+    "mysql2": "^3.18.2"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.161",
+    "@types/node": "^25.3.3",
+    "typescript": "^5.9.3"
+  }
+}
