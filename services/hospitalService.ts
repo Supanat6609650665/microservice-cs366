@@ -1,13 +1,17 @@
 
 import { getNearestHospital } from '../repositories/hospitalRepository'
 import { createTransferRequest } from '../repositories/hospitalRepository'
+import { SeverityLevel } from '../types/query'
+import { hospitalDTO } from '../lib/hospitalDTO'
 
 export const getNearestHospitalService = async (
-    lat: string,
-    lon: string,
-    severitylevel: string
+    lat: number,
+    lon: number,
+    severitylevel: SeverityLevel
 ) => {
-    const hospitals = await getNearestHospital(lat, lon, severitylevel)
+    const rows = await getNearestHospital(lat, lon, severitylevel)
+
+    const hospitals = hospitalDTO(rows)
 
     return hospitals
 }

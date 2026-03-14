@@ -1,6 +1,8 @@
 
 import { db } from '../config/db'
 import { ResultSetHeader, RowDataPacket } from 'mysql2'
+import { SeverityLevel } from '../types/query'
+import { HospitalDB } from '../types/hospital'
 
 interface User extends RowDataPacket {
     status: string,
@@ -13,14 +15,20 @@ interface User extends RowDataPacket {
 }
 
 export const getNearestHospital = async (
-    lat: string,
-    lon: string,
-    severitylevel: string
+    lat: number,
+    lon: number,
+    severitylevel: SeverityLevel
 ) => {
 
-    const sql = "SELECT * FROM Hospital"
+    const sql = `SELECT hospital_id, name, status, lat, lon, address,
+                 available_beds, available_icu, available_emergencybed
+                 FROM Hospital`
     
-    const [rows] = await db.query(sql)
+    const [rows] = await db.query<HospitalDB[]>(sql)
+
+    if(!rows){
+        throw new Error('Internal Server Error')
+    }
 
     return rows
 }
