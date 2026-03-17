@@ -1,33 +1,67 @@
 
 import { createTransferRequestService } from '../services/hospitalService'
 import { publishTransferRequestCreated } from '../events/transferRequestCreated'
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
+import { AppError } from '../types/error'
+import { isTransferRequest } from '../lib/validateTransferRequest'
 
-export const createTransferRequest = async (event: any) => {
+export const handler = async (
+    event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
 
-    const req = JSON.parse(event.body)
+    try{
+        if(!event.body){
+            throw new AppError(400, 'Bad Request')
+        }
 
-    const request = {
-        incidentId: req.incidentId,
-        hospitalId: req.hospitalId,
-        severityLevel: req.severityLevel,
-        injuryDescription: req.injuryDescription,
-        lat: req.lat,
-        lon: req.lon,
-        conscious: req.conscious ? req.conscious : null,
-        bloodPressure: req.bloodPressure ? req.bloodPressure : null,
-        heartRate: req.heartRate ? req.heartRate : null
-    }
+        const data: unknown = JSON.parse(event.body)
 
-    const transferRequest = await createTransferRequestService(request)
+        if(!isTransferRequest(data)){
+            throw new AppError(400, 'Bad Request')
+        }
 
-    await publishTransferRequestCreated(transferRequest)
+        if(!data.conscious){
+            data.conscious = null
+        }
 
-    return {
-        statusCode: 201,
-        body: JSON.stringify({
-            trId: transferRequest.trId,
-            status: transferRequest.status,
-            message: transferRequest.message
-        })
+        if(!data.bloodPressure){
+            data.bloodPressure = null
+        }
+
+        if(!data.heartRate){
+            data.heartRate = null
+        }
+
+        const transferRequest = await createTransferRequestService(data)
+        
+        await publishTransferRequestCreated(transferRequest)
+
+        return {
+            statusCode: 201,
+            body: JSON.stringify(transferRequest)
+        }
+
+    } catch(err){
+        if(err instanceof AppError){
+            return {
+                statusCode: err.statusCode,
+                body: JSON.stringify({
+                    statusCode: err.statusCode,
+                    message: err.message
+                })
+            }
+        }
+        else{
+            return {
+                statusCode: 500,
+                body: JSON.stringify({
+                    statusCode: 500,
+                    body: JSON.stringify({
+                        statusCode: 500,
+                        message: err instanceof Error ? err.message : "Something Went Wrong"
+                    })
+                })
+            }
+        }
     }
 }
