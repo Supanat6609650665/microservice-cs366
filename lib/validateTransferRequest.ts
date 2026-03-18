@@ -19,6 +19,7 @@ export const isTransferRequest = (
         typeof transferRequest.injuryDescription === "string" &&
         typeof transferRequest.lat === "number" &&
         typeof transferRequest.lon === "number" &&
+        typeof transferRequest.requestedBy === "string" &&
         (typeof transferRequest.conscious === "boolean" || transferRequest.conscious === undefined) &&
         (typeof transferRequest.bloodPressure === "string" || transferRequest.bloodPressure === undefined) &&
         (typeof transferRequest.heartRate === "number" || transferRequest.heartRate === undefined)

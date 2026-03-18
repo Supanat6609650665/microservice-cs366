@@ -14,7 +14,8 @@ export const transferRequestDTO = (
         conscious: row.conscious,
         bloodPressure: row.blood_pressure,
         heartRate: row.heart_rate,
-        requestedAt: row.requestedAt
+        requestedAt: row.requestedAt,
+        requestedBy: row.requested_by
     }
 
     return transferRequest

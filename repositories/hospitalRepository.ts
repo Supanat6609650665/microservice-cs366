@@ -30,8 +30,8 @@ export const createTransferRequest = async (
 ) => {
     
     const sql = `INSERT INTO TransferRequest (incident_id, hospital_id, severity_level,
-                 injury_description, lat, lon, conscious, blood_pressure, heart_rate)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+                 injury_description, lat, lon, requested_by, conscious, blood_pressure, heart_rate)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
     const [row] = await db.query<ResultSetHeader>(sql, [
         data.incidentId,
@@ -40,6 +40,7 @@ export const createTransferRequest = async (
         data.injuryDescription,
         data.lat,
         data.lon,
+        data.requestedBy,
         data.conscious,
         data.bloodPressure,
         data.heartRate
@@ -49,7 +50,7 @@ export const createTransferRequest = async (
         throw new Error('Internal Server Error')
     }
 
-    const sql2 = `SELECT tr_id, incident_id, status, hospital_id, severity_level, injury_description, conscious, blood_pressure, heart_rate, requestedAt
+    const sql2 = `SELECT tr_id, incident_id, status, hospital_id, severity_level, injury_description, conscious, blood_pressure, heart_rate, requestedAt, requested_by
                   FROM TransferRequest
                   WHERE tr_id = ?`
 

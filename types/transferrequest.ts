@@ -2,7 +2,8 @@
 import { SeverityLevel } from '../types/query'
 import { RowDataPacket } from 'mysql2'
 
-export type Status = "PENDING" | "ACCEPTED" | "REJECTED" | "CONFIRMED" | "ARRIVED" | "COMPLETED"
+export const STATUS = ["PENDING", "ACCEPTED", "REJECTED", "CONFIRMED", "ARRIVED", "COMPLETED"] as const
+export type Status = typeof STATUS[number]
 
 export interface TransferRequest{
     incidentId: string,
@@ -11,6 +12,7 @@ export interface TransferRequest{
     injuryDescription: string,
     lat: number,
     lon: number,
+    requestedBy: string,
     conscious?: boolean | null,
     bloodPressure?: string | null,
     heartRate?: number | null
@@ -26,7 +28,8 @@ export interface TransferRequestDB extends RowDataPacket{
     conscious: boolean | null,
     blood_pressure: string | null,
     heart_rate: number | null,
-    requestedAt: string
+    requestedAt: string,
+    requested_by: string
 }
 
 export interface TransferRequestDTO{
@@ -39,5 +42,6 @@ export interface TransferRequestDTO{
     conscious: boolean | null,
     bloodPressure: string | null,
     heartRate: number | null,
-    requestedAt: string
+    requestedAt: string,
+    requestedBy: string
 }

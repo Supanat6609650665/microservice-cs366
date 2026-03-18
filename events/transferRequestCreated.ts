@@ -39,7 +39,8 @@ export const publishTransferRequestCreated = async (
             :
             {}
         ),
-        requestedAt: data.requestedAt
+        requestedAt: data.requestedAt,
+        requestedBy: data.requestedBy
     }
 
     const response = await snsClient.send(
