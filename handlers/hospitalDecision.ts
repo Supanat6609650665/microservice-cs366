@@ -1,43 +1,33 @@
 
 import { SQSEvent, SQSBatchResponse } from 'aws-lambda'
 import { publishHospitalUpdateStatus } from '../events/hospitalUpdateStatus'
+import { isTransferRequestMessage } from '../lib/validateTransferRequestMessage'
 
-export const hospitalDecision = async (
+export const handler = async (
     event: SQSEvent
 ): Promise<SQSBatchResponse> => {
 
-    const batchItemFailures = [];
+    const batchItemFailures: { itemIdentifier: string }[] = [];
 
     for (const record of event.Records) {
         try {
-            const snsEnvelope = JSON.parse(record.body);
+            const data = JSON.parse(record.body);
 
-            const message = JSON.parse(snsEnvelope.Message);
+            const message: unknown = JSON.parse(data.Message);
 
-            let messages: any = {}
-
-            if(message?.conscious){
-                messages.conscious = message.conscious
+            if(!isTransferRequestMessage(message)){
+                throw new Error('Invalid Message')
             }
 
-            if(message?.bloodPressure){
-                messages.bloodPressure = message.bloodPressure
-            }
-
-            if(message?.heartRate){
-                messages.heartRate = message.heartRate
-            }
-
-            messages.transferRequestId = message.transferRequestId
-            messages.hospitalId = message.hospitalId
-            messages.severityLevel = message.severityLevel
-            messages.injuryDescription = message.injuryDescription
-            messages.status = message.status
-
-            await publishHospitalUpdateStatus(messages)
+            await publishHospitalUpdateStatus(message)
 
         } catch (error) {
-            console.error("Failed processing message:", error);
+
+            console.log({
+                messageId: record.messageId,
+                messageBody: JSON.parse(record.body),
+                error: error instanceof Error && error.message
+            })
 
             batchItemFailures.push({
                 itemIdentifier: record.messageId

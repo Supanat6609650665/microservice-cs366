@@ -12,4 +12,14 @@ export interface TransferRequestMessage{
     bloodPressure?: string,
     heartRate?: number,
     requestedAt: string,
+    requestedBy: string
+}
+
+export interface HospitalDecisionMessage{
+    trId: number,
+    status: Status,
+    message: string,
+    requestedAt: string,
+    respondedAt: string,
+    requestedBy: string
 }
