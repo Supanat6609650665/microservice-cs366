@@ -3,7 +3,8 @@ import { db } from '../config/db'
 import { ResultSetHeader, RowDataPacket } from 'mysql2'
 import { SeverityLevel } from '../types/query'
 import { HospitalDB } from '../types/hospital'
-import { TransferRequest, TransferRequestDB } from '../types/transferrequest'
+import { TransferRequest, TransferRequestDB, TransferRequestDetailDB } from '../types/transferrequest'
+import { AppError } from '../types/error'
 
 
 export const getNearestHospital = async (
@@ -62,4 +63,30 @@ export const createTransferRequest = async (
 
     return row2[0]
 
+}
+
+export const getConfirmationMessage = async (
+    id: number
+)=> {
+    const sql = `SELECT tr.tr_id as tr_id, tr.incident_id as incident_id, 
+                 tr.severity_level as severity_level, tr.status as status,
+                 tr.injury_description as injury_description, tr.conscious as conscious,
+                 tr.blood_pressure as blood_pressure, tr.heart_rate as heart_rate,
+                 tr.requestedAt as requestedAt, tr.respondedAt as respondedAt,
+                 tr.requested_by as requestedBy, tr.hospital_message as hospital_message,
+                 h.hospital_id as hospital_id, h.name as name, h.lat as lat, h.lon as lon,
+                 h.status as hospital_status, h.address as address 
+                 FROM TransferRequest as tr
+                 INNER JOIN Hospital as h
+                 ON tr.hospital_id = h.hospital_id
+                 WHERE tr.tr_id = ?`
+
+    const [row] = await db.query<TransferRequestDetailDB[]>(sql, [id])
+
+    if(row[0] === undefined){
+        throw new AppError(404, 'Not Found')
+    }
+
+    return row[0]
+    
 }
