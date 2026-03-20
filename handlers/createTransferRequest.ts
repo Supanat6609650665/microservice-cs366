@@ -38,7 +38,11 @@ export const handler = async (
 
         return {
             statusCode: 201,
-            body: JSON.stringify(transferRequest)
+            body: JSON.stringify({
+                trId: transferRequest.trId,
+                status: transferRequest.status,
+                message: "Waiting for hospital confirmation"
+            })
         }
 
     } catch(err){

@@ -22,12 +22,13 @@ export const handler = async(
             }
 
             const sql = `UPDATE TransferRequest
-                         SET status = ?, respondedAt = ?
+                         SET status = ?, respondedAt = ?, hospital_message = ?
                          WHERE tr_id = ?`
 
             await db.query<ResultSetHeader>(sql, [
                 message.status,
                 message.respondedAt,
+                message.message,
                 message.trId
             ])
 
