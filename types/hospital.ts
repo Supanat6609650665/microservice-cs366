@@ -1,12 +1,12 @@
 
 import { RowDataPacket } from 'mysql2'
 
-export type Status = "OPEN" | "CLOSED" | "OVERLOADED"
+export type HospitalStatus = "OPEN" | "CLOSED" | "OVERLOADED"
 
 export interface HospitalDB extends RowDataPacket{
     hospital_id: string,
     name: string,
-    status: Status,
+    status: HospitalStatus,
     lat: string,
     lon: string,
     address: string,
@@ -18,7 +18,7 @@ export interface HospitalDB extends RowDataPacket{
 export interface HospitalDTO{
     hospitalId: string,
     name: string,
-    status: Status,
+    status: HospitalStatus,
     lat: string,
     lon: string,
     address: string,

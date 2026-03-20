@@ -15,10 +15,10 @@ export const publishTransferRequestCreated = async (
         severityLevel: data.severityLevel,
         injuryDescription: data.injuryDescription,
         status: data.status,
-        ...(data.conscious
+        ...(data.conscious !== null
             ?
             {
-                conscious: data.conscious
+                conscious: data.conscious ? true : false
             } 
             :
             {}
