@@ -24,7 +24,7 @@ export const isTransferRequestMessage = (
         typeof trMessage.requestedBy === "string" &&
         (typeof trMessage.conscious === "boolean" || trMessage.conscious === undefined) &&
         (typeof trMessage.bloodPressure === "string" || trMessage.bloodPressure === undefined) &&
-        (typeof trMessage.heartRate === "number" || trMessage.heartRate === undefined)
-
+        (typeof trMessage.heartRate === "number" || trMessage.heartRate === undefined) &&
+        (typeof trMessage.requestId === 'string' || trMessage.requestId === undefined)
     )
 }

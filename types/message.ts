@@ -12,7 +12,8 @@ export interface TransferRequestMessage{
     bloodPressure?: string,
     heartRate?: number,
     requestedAt: string,
-    requestedBy: string
+    requestedBy: string,
+    requestId?: string
 }
 
 export interface HospitalDecisionMessage{
@@ -21,5 +22,6 @@ export interface HospitalDecisionMessage{
     message: string,
     requestedAt: string,
     respondedAt: string,
-    requestedBy: string
+    requestedBy: string,
+    requestId?: string
 }

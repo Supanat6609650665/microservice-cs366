@@ -18,6 +18,7 @@ export const isHospitalDecisionMessage = (
         typeof hdMessage.message === "string" &&
         typeof hdMessage.requestedAt === "string" &&
         typeof hdMessage.respondedAt === "string" &&
-        typeof hdMessage.requestedBy === "string"
+        typeof hdMessage.requestedBy === "string" &&
+        (typeof hdMessage.requestId === 'string' || hdMessage.requestId === undefined)
     )
 }
