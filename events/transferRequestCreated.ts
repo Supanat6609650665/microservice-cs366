@@ -6,7 +6,8 @@ import { TransferRequestDTO } from '../types/transferrequest'
 import { TransferRequestMessage } from '../types/message' 
 
 export const publishTransferRequestCreated = async (
-    data: TransferRequestDTO
+    data: TransferRequestDTO,
+    requestId: string
 ) => {
 
     const message: TransferRequestMessage = {
@@ -40,7 +41,13 @@ export const publishTransferRequestCreated = async (
             {}
         ),
         requestedAt: data.requestedAt,
-        requestedBy: data.requestedBy
+        requestedBy: data.requestedBy,
+        ...( requestId
+            ? {
+                requestId
+              }
+            : {}
+        )
     }
 
     const response = await snsClient.send(

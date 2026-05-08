@@ -13,7 +13,13 @@ export const publishHospitalUpdateStatus = async(
         message: "Hospital has now confirmed your transfer request",
         requestedAt: data.requestedAt,
         respondedAt: new Date().toISOString(),
-        requestedBy: data.requestedBy
+        requestedBy: data.requestedBy,
+        ...(data.requestId
+            ? {
+                requestId: data.requestId
+              }
+            : {}
+        )
     }
 
     const response = await snsClient.send(

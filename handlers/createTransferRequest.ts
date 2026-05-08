@@ -4,6 +4,8 @@ import { publishTransferRequestCreated } from '../events/transferRequestCreated'
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { AppError } from '../types/error'
 import { isTransferRequest } from '../lib/validateTransferRequest'
+import { createHelpRequest } from '../lib/createHelpRequest'
+import { updateHelpRequest } from '../lib/updateHelpRequest'
 
 export const handler = async (
     event: APIGatewayProxyEvent
@@ -33,8 +35,14 @@ export const handler = async (
         }
 
         const transferRequest = await createTransferRequestService(data)
+
+        const res = await createHelpRequest(transferRequest, data.lat, data.lon)
         
-        await publishTransferRequestCreated(transferRequest)
+        await publishTransferRequestCreated(transferRequest, res.data?.request_id || '')
+
+        if(res.ok && res.data){
+            await updateHelpRequest(res.data.request_id, 'sent_request_hospital', 'HealthCareService ได้ทําการส่ง TransferRequest ไปยังโรงพยาบาลเเล้ว')
+        }
 
         return {
             statusCode: 201,

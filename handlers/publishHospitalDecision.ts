@@ -4,6 +4,7 @@ import { isHospitalDecisionMessage } from '../lib/validateHospitalDecisionMessag
 import { db } from '../config/db'
 import { ResultSetHeader } from 'mysql2'
 import { publishHospitalDecision } from '../events/hospitalDecision'
+import { updateHelpRequest } from '../lib/updateHelpRequest'
 
 export const handler = async(
     event: SQSEvent
@@ -31,6 +32,10 @@ export const handler = async(
                 message.message,
                 message.trId
             ])
+
+            if(message.requestId){
+                await updateHelpRequest(message.requestId, 'hospital_confirm', 'โรงพยาบาลได้ตอบรับคําขอในการเข้ารับการรักษาเเล้ว')
+            }
 
             await publishHospitalDecision(message)
 
